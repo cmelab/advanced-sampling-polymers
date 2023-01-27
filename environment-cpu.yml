@@ -1,0 +1,18 @@
+name: polymers 
+channels:
+  - conda-forge
+dependencies:
+  - foyer
+  - freud
+  - gsd
+  - jupyter
+  - hoomd=3.7.0=*cpu*
+  - mbuild
+  - py3Dmol
+  - numpy
+  - pip
+  - pytest
+  - pytest-cov
+  - python=3.9
+  - pip:
+      - git+https://github.com/cmelab/cmeutils.git@master
