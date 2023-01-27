@@ -147,7 +147,7 @@ def sample(job):
         print("Running NPT simulation...")
         print("----------------------------")
         # Switch to an NPT run and let the box equilibrate
-        sim.run_NPT(kT=job.sp.NPT_kT, n_steps=job.sp.NPT_steps, tau_kt=job.sp.tau_kT, tau_p=job.sp.tau_p)
+        sim.run_NPT(kT=job.sp.NPT_kT, n_steps=job.sp.NPT_steps, tau_kt=job.sp.tau_kT, tau_pressure=job.sp.tau_p)
         job.doc["NPT_done"] = True
 
         print("----------------------------")

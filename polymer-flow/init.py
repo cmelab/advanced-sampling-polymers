@@ -37,7 +37,7 @@ def get_parameters():
         {"x": None, "y": None, "z": None}
     ]
     parameters["kwargs"] = [
-        # {"expand_factor": 7},
+        {"expand_factor": 7},
         # {"n": 4, "a": 1.5, "b": 1.5}
     ]
     ### SIMULATION PARAMETERS ###
@@ -58,7 +58,6 @@ def get_parameters():
     parameters["NPT_kT"] = [2.0]
     parameters["NPT_steps"] = [5e5]
     parameters["NPT_p"] = [0.001]
-
 
     parameters["gsd_write_freq"] = [10000]
     parameters["log_write_freq"] = [1000]
