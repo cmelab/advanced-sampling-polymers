@@ -293,7 +293,7 @@ class Simulation:
 
     def temperature_ramp(self, n_steps, kT_start, kT_final):
         return hoomd.variant.Ramp(
-                A=start,
+                A=kT_start,
                 B=kT_final,
                 t_start=self.sim.timestep,
                 t_ramp=int(n_steps)
