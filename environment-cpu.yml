@@ -14,5 +14,7 @@ dependencies:
   - pytest
   - pytest-cov
   - python=3.9
+  - signac=1.7.0
+  - signac-flow=0.18.1
   - pip:
       - git+https://github.com/cmelab/cmeutils.git@master
