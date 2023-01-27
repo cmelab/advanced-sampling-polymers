@@ -53,7 +53,7 @@ class Simulation:
         auto_scale=True,
         seed=42,
         restart=None,
-        pppm_kwargs={"Nx": 16, "Ny": 16, "Nz": 16}
+        pppm_kwargs={"Nx": 16, "Ny": 16, "Nz": 16},
         gsd_write_freq=1e4,
         gsd_file_name="trajectory.gsd",
         log_write_freq=1e3,
@@ -291,9 +291,9 @@ class Simulation:
         )
         self.sim.run(n_steps)
 
-    def temperature_ramp(self, n_steps, kT_start, kT_final, period):
+    def temperature_ramp(self, n_steps, kT_start, kT_final):
         return hoomd.variant.Ramp(
-                A=kT_init,
+                A=kT_start,
                 B=kT_final,
                 t_start=self.sim.timestep,
                 t_ramp=int(n_steps)
