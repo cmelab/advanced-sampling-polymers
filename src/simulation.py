@@ -53,7 +53,7 @@ class Simulation:
         auto_scale=True,
         seed=42,
         restart=None,
-        pppm_kwargs={"Nx": 16, "Ny": 16, "Nz": 16}
+        pppm_kwargs={"Nx": 16, "Ny": 16, "Nz": 16},
         gsd_write_freq=1e4,
         gsd_file_name="trajectory.gsd",
         log_write_freq=1e3,
