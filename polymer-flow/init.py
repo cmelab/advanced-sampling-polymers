@@ -20,12 +20,15 @@ import signac
 
 def get_parameters():
     parameters = OrderedDict()
-    
+
     ### SYSTEM GENERATION PARAMETERS ###
-    parameters["molecule"] = ["PPS", "PolyEthylene"]
-    parameters["n_mols"] = [[50]]
-    parameters["chain_lengths"] = [[6]]
-    parameters["density"] = [1.27]
+    parameters["molecule"] = [
+                              #"PPS",
+                              "PolyEthylene"
+                              ]
+    parameters["n_mols"] = [[30]]
+    parameters["chain_lengths"] = [[10]]
+    parameters["density"] = [1.1]
     parameters["system_type"] = [
         "pack",
     ]
@@ -34,28 +37,31 @@ def get_parameters():
         {"x": None, "y": None, "z": None}
     ]
     parameters["kwargs"] = [
-        {"expand_factor": 7},
+        # {"expand_factor": 7},
         # {"n": 4, "a": 1.5, "b": 1.5}
     ]
     ### SIMULATION PARAMETERS ###
     parameters["tau_kT"] = [0.1]
     parameters["tau_p"] = [0.1]
     parameters["sim_seed"] = [42]
-    parameters["dt"] = [0.0003]
+    parameters["dt"] = [0.0001]
+    parameters["r_cut"] = [2.5]
 
-    parameters["shrink_kT"] = [0.5]
-    parameters["shrink_steps"] = [1e4]
-    parameters["shrink_period"] = [100]
+    parameters["shrink_kT"] = [8.0]
+    parameters["shrink_steps"] = [2e5]
+    parameters["shrink_period"] = [1000]
 
-    parameters["NPT_kT"] = [1.0]
-    parameters["NPT_steps"] = [1e6]
+    parameters["NVT_start_kT"] = [8.0]
+    parameters["NVT_final_kT"] = [2.0]
+    parameters["NVT_steps"] = [5e5]
+
+    parameters["NPT_kT"] = [2.0]
+    parameters["NPT_steps"] = [5e5]
     parameters["NPT_p"] = [0.001]
 
-    parameters["NVT_kT"] = [1.0]
-    parameters["NVT_steps"] = [1e6]
 
-    parameters["r_cut"] = [2.5]
-    parameters["e_factor"] = [0.5]
+    parameters["gsd_write_freq"] = [10000]
+    parameters["log_write_freq"] = [1000]
 
     return list(parameters.keys()), list(product(*parameters.values()))
 

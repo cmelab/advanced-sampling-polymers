@@ -108,12 +108,11 @@ def sample(job):
         print("Starting simulation...")
         print("----------------------")
         sim = Simulation(system=sys.typed_system, dt=job.sp.dt, r_cut=job.sp.r_cut, seed=job.sp.sim_seed,
+                         gsd_write_freq=job.sp.gsd_write_freq, log_write_freq=job.sp.log_write_freq,
                          auto_scale=True)
         job.doc['ref_energy'] = sim.ref_energy
         job.doc['ref_distance'] = sim.ref_distance
         job.doc['ref_mass'] = sim.ref_mass
-        job.doc['steps_per_frame'] = sim.gsd_write_freq
-        job.doc['steps_per_log'] = sim.log_write_freq
 
         print("------------------------------")
         print("Simulation object generated...")
@@ -133,10 +132,29 @@ def sample(job):
         job.doc["shrink_done"] = True
 
         print("----------------------------")
+        print("Running NVT simulation (Annealing)...")
+        print("----------------------------")
+        # Set up temperature annealing and run to cool the system
+        anneal_ramp = sim.temperature_ramp(n_steps=job.sp.NVT_steps, kT_start=job.sp.NVT_start_kT,
+                                           kT_final=job.sp.NVT_final_kT)
+        sim.run_NVT(n_steps=job.sp.NVT_steps, kT=anneal_ramp, tau_kt=job.sp.tau_kT)
+
+        # Run a while longer at the final temperature in NVT
+        sim.run_NVT(kT=job.sp.NVT_final_kT, n_steps=job.sp.NVT_steps, tau_kt=job.sp.tau_kT)
+        job.doc["NVT_annealing_done"] = True
+
+        print("----------------------------")
+        print("Running NPT simulation...")
+        print("----------------------------")
+        # Switch to an NPT run and let the box equilibrate
+        sim.run_NPT(kT=job.sp.NPT_kT, n_steps=job.sp.NPT_steps, tau_kt=job.sp.tau_kT, tau_p=job.sp.tau_p)
+        job.doc["NPT_done"] = True
+
+        print("----------------------------")
         print("Running NVT simulation...")
         print("----------------------------")
-
-        sim.run_NVT(n_steps=job.sp.NVT_steps, kT=job.sp.NVT_kT, tau_kt=job.sp.tau_kT)
+        # Run at NVT with the equilibrated volume
+        sim.run_NVT(kT=job.sp.NVT_final_kT, n_steps=job.sp.NVT_steps, tau_kt=job.sp.tau_kT)
         job.doc["NVT_done"] = True
 
         job.doc["final_timestep"] = sim.sim.timestep
