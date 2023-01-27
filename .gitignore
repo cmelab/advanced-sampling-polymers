@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# IDE files
+.idea/
+# Signac files
+workspace/*
+*.out
+signac.rc
+signac_project_document.json
+signac_statepoints.json
