@@ -291,7 +291,7 @@ class Simulation:
         )
         self.sim.run(n_steps)
 
-    def temperature_ramp(self, n_steps, kT_start, kT_final, period):
+    def temperature_ramp(self, n_steps, kT_start, kT_final):
         return hoomd.variant.Ramp(
                 A=kT_init,
                 B=kT_final,
