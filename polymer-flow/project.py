@@ -109,7 +109,8 @@ def sample(job):
         print("----------------------")
         sim = Simulation(system=sys.typed_system, dt=job.sp.dt, r_cut=job.sp.r_cut, seed=job.sp.sim_seed,
                          gsd_write_freq=job.sp.gsd_write_freq, log_write_freq=job.sp.log_write_freq,
-                         auto_scale=True)
+                         auto_scale=job.sp.auto_scale)
+
         job.doc['ref_energy'] = sim.ref_energy
         job.doc['ref_distance'] = sim.ref_distance
         job.doc['ref_mass'] = sim.ref_mass
@@ -131,6 +132,8 @@ def sample(job):
 
         job.doc["shrink_done"] = True
 
+        print('Updating epsilons...')
+        sim.update_epsilon(e_factor=job.sp.e_factor)
         print("----------------------------")
         print("Running NVT simulation (Annealing)...")
         print("----------------------------")
