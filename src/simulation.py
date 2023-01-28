@@ -333,3 +333,11 @@ class Simulation:
         )
         self.sim.operations.writers.append(gsd_writer)
         self.sim.operations.writers.append(table_file)
+
+    def update_epsilon(self, e_factor):
+        lj_force = self.forcefield[0]
+        assert type(lj_force) == hoomd.md.pair.pair.LJ
+
+        for k in lj_force.params.keys():
+            epsilon = lj_force.params[k]['epsilon']
+            lj_force.params[k]['epsilon'] = epsilon * e_factor
