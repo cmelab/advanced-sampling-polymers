@@ -46,7 +46,7 @@ def get_parameters():
     parameters["sim_seed"] = [42]
     parameters["dt"] = [0.0001]
     parameters["r_cut"] = [2.5]
-    parameters["auto_scale"] = [False]
+    parameters["auto_scale"] = [True]
 
     parameters["shrink_kT"] = [8.0]
     parameters["shrink_steps"] = [2e5]
@@ -64,7 +64,7 @@ def get_parameters():
     parameters["log_write_freq"] = [1000]
 
     # epsilon adjusting factor
-    parameters["e_factor"] = [0.1, 0.5, 0.8, 1.1, 1.3, 1.5, 2, 3, 4, 10, 50, 100]
+    parameters["e_factor"] = [0.1, 0.5]
 
     return list(parameters.keys()), list(product(*parameters.values()))
 
