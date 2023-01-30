@@ -121,10 +121,13 @@ def sample(job):
         print("----------------------------")
         print("Running shrink simulation...")
         print("----------------------------")
-
+        if job.sp.auto_scale:
+            final_box_lengths = sys.target_box * 10 / sim.ref_distance
+        else:
+            final_box_lengths = sys.target_box * 10
         sim.run_shrink(
             kT=job.sp.shrink_kT,
-            final_box_lengths=sys.target_box * 10 / sim.ref_distance,
+            final_box_lengths=final_box_lengths,
             n_steps=job.sp.shrink_steps,
             tau_kt=job.sp.tau_kT,
             period=job.sp.shrink_period,
