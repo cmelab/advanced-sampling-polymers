@@ -3,10 +3,11 @@ import numpy as np
 
 
 class System:
-    def __init__(self, molecule, n_mols, chain_lengths, density):
+    def __init__(self, molecule, n_mols, chain_lengths, density, remove_charge=False):
         self.density = density
         self.n_mols = n_mols
         self.chain_lengths = chain_lengths
+        self.remove_charge = remove_charge
         self.system = None
         self.typed_system = None
         self.target_box = None
@@ -21,13 +22,13 @@ class System:
     def pack(self, expand_factor=5):
         self.set_target_box()
         self.system = mb.packing.fill_box(
-                compound=self.chains,
-                n_compounds=[1 for i in self.chains],
-                box=(self.target_box * expand_factor).tolist(),
-                overlap=0.2,
-                edge=0.2
+            compound=self.chains,
+            n_compounds=[1 for i in self.chains],
+            box=(self.target_box * expand_factor).tolist(),
+            overlap=0.2,
+            edge=0.2
         )
-    
+
     def set_target_box(
             self, x_constraint=None, y_constraint=None, z_constraint=None
     ):
@@ -51,17 +52,20 @@ class System:
             Lx = Ly = Lz = self._calculate_L()
         else:
             constraints = np.array([x_constraint, y_constraint, z_constraint])
-            fixed_L = constraints[np.where(constraints!=None)]
-            #Conv from nm to cm for _calculate_L
+            fixed_L = constraints[np.where(constraints != None)]
+            # Conv from nm to cm for _calculate_L
             fixed_L *= 1e-7
             L = self._calculate_L(fixed_L=fixed_L)
-            constraints[np.where(constraints==None)] = L
+            constraints[np.where(constraints == None)] = L
             Lx, Ly, Lz = constraints
 
         self.target_box = np.array([Lx, Ly, Lz])
 
     def apply_forcefield(self, forcefield):
         self.typed_system = forcefield.apply(self.system)
+        if self.remove_charge:
+            for atom in self.typed_system.atoms:
+                atom.charge = 0
 
     def _calculate_L(self, fixed_L=None):
         """Calculates the required box length(s) given the
@@ -81,21 +85,21 @@ class System:
         """
         # Convert from amu to grams
         M = self.mass * 1.66054e-24
-        vol = (M / self.density) # cm^3
+        vol = (M / self.density)  # cm^3
         if fixed_L is None:
-            L = vol**(1/3)
+            L = vol ** (1 / 3)
         else:
             L = vol / np.prod(fixed_L)
-            if len(fixed_L) == 1: # L is cm^2
-                L = L**(1/2)
+            if len(fixed_L) == 1:  # L is cm^2
+                L = L ** (1 / 2)
         # Convert from cm back to nm
         L *= 1e7
         return L
-    
+
     def visualize(self):
         if self.system:
             return self.system.visualize()
         else:
             raise ValueError(
-                    "The system configuration hasn't been initialzed yet. "
+                "The system configuration hasn't been initialzed yet. "
             )
