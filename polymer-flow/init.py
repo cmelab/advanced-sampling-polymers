@@ -27,8 +27,9 @@ def get_parameters():
                               "PolyEthylene"
                               ]
     parameters["n_mols"] = [[30]]
-    parameters["chain_lengths"] = [[10]]
-    parameters["density"] = [1.1]
+    parameters["chain_lengths"] = [[20]]
+    parameters["density"] = [0.8, 1.]
+    parameters["remove_charge"] = [True]
     parameters["system_type"] = [
         "pack",
     ]
@@ -48,14 +49,15 @@ def get_parameters():
     parameters["r_cut"] = [2.5]
     parameters["auto_scale"] = [True]
 
-    parameters["shrink_kT"] = [8.0]
+    parameters["shrink_kT"] = [16.0]
     parameters["shrink_steps"] = [2e5]
     parameters["shrink_period"] = [1000]
 
-    parameters["NVT_start_kT"] = [8.0]
-    parameters["NVT_final_kT"] = [2.0]
+    parameters["NVT_start_kT"] = [16.0]
+    parameters["NVT_final_kT"] = [13.0]
     parameters["NVT_steps"] = [5e5]
 
+    parameters["final_NVT_steps"] = [1e7]
     parameters["NPT_kT"] = [2.0]
     parameters["NPT_steps"] = [5e5]
     parameters["NPT_p"] = [0.001]
@@ -64,7 +66,7 @@ def get_parameters():
     parameters["log_write_freq"] = [1000]
 
     # epsilon adjusting factor
-    parameters["e_factor"] = [0.1, 0.5]
+    parameters["e_factor"] = [0.01, 0.02, 0.05, 0.1, 0.2, 0.3, 0.5, 0.7, 0.8, 0.9, 1]
 
     return list(parameters.keys()), list(product(*parameters.values()))
 
