@@ -96,7 +96,12 @@ class Simulation:
                 pppm_kwargs=self.pppm_kwargs 
         )
         if self.restart:
-            self.sim.create_state_from_gsd(self.restart)
+            # Restarting from a GSD File
+            if isinstance(self.restart, str):
+                self.sim.create_state_from_gsd(self.restart)
+            # Restarting from a gsd.hoomd.Snapshot
+            elif isinstance(self.restart, gsd.hoomd.Snapshot):
+                self.sim.create_state_from_snapshot(self.restart)
         else:
             self.sim.create_state_from_snapshot(self.init_snap)
         # Add a gsd and thermo props logger to sim operations
@@ -312,7 +317,7 @@ class Simulation:
         gsd_writer = hoomd.write.GSD(
                 filename=self.gsd_file_name,
                 trigger=hoomd.trigger.Periodic(int(self.gsd_write_freq)),
-                mode="wb",
+                mode="ab",
                 dynamic=["momentum"]
         )
 
