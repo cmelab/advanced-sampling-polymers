@@ -317,7 +317,7 @@ class Simulation:
         gsd_writer = hoomd.write.GSD(
                 filename=self.gsd_file_name,
                 trigger=hoomd.trigger.Periodic(int(self.gsd_write_freq)),
-                mode="wb",
+                mode="ab",
                 dynamic=["momentum"]
         )
 
