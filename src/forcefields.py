@@ -1,10 +1,20 @@
 import foyer
+from pkg_resources import resource_filename
+
+class GAFF(foyer.Forcefield):
+    def __init__(self, forcefield_files="library/forcefields/gaff.xml"):
+        super(GAFF, self).__init__(forcefield_files=forcefield_files)
+        self.description = (
+                "The General Amber Forcefield written in foyer XML format. "
+                "The XML file was obtained from the antefoyer package: "
+                "https://github.com/rsdefever/antefoyer/tree/master/antefoyer"
+        )
 
 class OPLS_AA(foyer.Forcefield):
     def __init__(self, name="oplsaa"):
-        super(OPLSAA, self).__init__(name=name)
+        super(OPLS_AA, self).__init__(name=name)
         self.description = (
-                "Standard opls-aa forcefield found in the Foyer library"
+                "opls-aa forcefield found in the Foyer package"
         )
 
 
