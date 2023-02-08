@@ -3,10 +3,18 @@ import numpy as np
 
 
 class System:
-    def __init__(self, molecule, n_mols, chain_lengths, density):
+    def __init__(
+            self,
+            molecule,
+            n_mols,
+            chain_lengths,
+            density,
+            united_atom=False
+    ):
         self.density = density
         self.n_mols = n_mols
         self.chain_lengths = chain_lengths
+        self.united_atom = united_atom
         self.system = None
         self.typed_system = None
         self.target_box = None
@@ -62,6 +70,16 @@ class System:
 
     def apply_forcefield(self, forcefield):
         self.typed_system = forcefield.apply(self.system)
+        if self.united_atom:
+            print("Removing hydrogen atoms and adjusting heavy atoms")
+            hydrogens = [a for a in self.typed_system.atoms if a.element == 1]
+            for h in hydrogens:
+                bonded_atom = h.bond_partners[0]
+                bonded_atom.mass += h.mass
+                bonded_atom.charge += h.charge
+            self.typed_system.strip(
+                    [a.atomic_number == 1 for a in self.typed_system.atoms]
+            )
 
     def _calculate_L(self, fixed_L=None):
         """Calculates the required box length(s) given the
