@@ -1,8 +1,8 @@
 import foyer
-from pkg_resources import resource_filename
+from library import FF_DIR
 
 class GAFF(foyer.Forcefield):
-    def __init__(self, forcefield_files="library/forcefields/gaff.xml"):
+    def __init__(self, forcefield_files=f"{FF_DIR}/gaff.xml"):
         super(GAFF, self).__init__(forcefield_files=forcefield_files)
         self.description = (
                 "The General Amber Forcefield written in foyer XML format. "
