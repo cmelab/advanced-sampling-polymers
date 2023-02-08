@@ -19,14 +19,14 @@ class System:
                 self.chains.append(chain)
 
     def pack(self, expand_factor=5):
+        self.set_target_box()
         self.system = mb.packing.fill_box(
                 compound=self.chains,
                 n_compounds=[1 for i in self.chains],
-                density=self.density/(expand_factor**3),
+                box=(self.target_box * expand_factor).tolist(),
                 overlap=0.2,
                 edge=0.2
         )
-        self.set_target_box()
     
     def set_target_box(
             self, x_constraint=None, y_constraint=None, z_constraint=None
@@ -80,7 +80,7 @@ class System:
 
         """
         # Convert from amu to grams
-        M = self.system.mass * 1.66054e-24
+        M = self.mass * 1.66054e-24
         vol = (M / self.density) # cm^3
         if fixed_L is None:
             L = vol**(1/3)
