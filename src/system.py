@@ -1,4 +1,5 @@
 import mbuild as mb
+from mbuild.formats.hoomd_forcefield import create_hoomd_forcefield
 import numpy as np
 
 
@@ -18,6 +19,7 @@ class System:
         self.system = None
         self.typed_system = None
         self.target_box = None
+        self.hoomd_objects = None 
         self.mass = 0
         self.chains = []
         for n, l in zip(n_mols, chain_lengths):
@@ -68,7 +70,7 @@ class System:
 
         self.target_box = np.array([Lx, Ly, Lz])
 
-    def apply_forcefield(self, forcefield):
+    def apply_forcefield(self, forcefield, scale_parameters=True):
         self.typed_system = forcefield.apply(self.system)
         if self.united_atom:
             print("Removing hydrogen atoms and adjusting heavy atoms")
@@ -80,6 +82,45 @@ class System:
             self.typed_system.strip(
                     [a.atomic_number == 1 for a in self.typed_system.atoms]
             )
+        init_snap, forcefield, refs = create_hoomd_forcefield(
+                structure=self.typed_system,
+                r_cut=2.5,
+                auto_scale=scale_parameters
+        )
+        self._hoomd_objects = [init_snap, forcefield, refs]
+
+    @property
+    def hoomd_snapshot(self):
+        if not self._hoomd_objects:
+            raise ValueError(
+                    "The hoomd snapshot has not yet been created. "
+                    "Create a Hoomd snapshot and forcefield by applying "
+                    "a forcefield using System.apply_forcefield()."
+            )
+        else:
+            return self._hoomd_objects[0] 
+
+    @property
+    def hoomd_forcefield(self):
+        if not self._hoomd_objects:
+            raise ValueError(
+                    "The hoomd forcefield has not yet been created. "
+                    "Create a Hoomd snapshot and forcefield by applying "
+                    "a forcefield using System.apply_forcefield()."
+            )
+        else:
+            return self._hoomd_objects[1] 
+
+    @property
+    def reference_values(self):
+        if not self._hoomd_objects:
+            raise ValueError(
+                    "The hoomd objects have not yet been created. "
+                    "Create a Hoomd snapshot and forcefield by applying "
+                    "a forcefield using System.apply_forcefield()."
+            )
+        else:
+            return self._hoomd_objects[2] 
 
     def _calculate_L(self, fixed_L=None):
         """Calculates the required box length(s) given the
